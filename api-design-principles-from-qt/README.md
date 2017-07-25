@@ -92,7 +92,7 @@
 
 ## 1.4 符合直觉
 
-就像计算机里的其他事物一样，`API`应该符合直观。对于什么是符合直觉的什么不符合，不同经验和背景的人对是否符合直觉会有不同的看法。`API`符合直观的测试方法：经验不很丰富的用户不用阅读`API`文档就能搞懂`API`，而且程序员不用了解`API`就能看明白使用`API`的代码。
+就像计算机里的其他事物一样，`API`应该符合直觉。对于什么是符合直觉的什么不符合，不同经验和背景的人会有不同的看法。`API`符合直觉的测试方法：经验不很丰富的用户不用阅读`API`文档就能搞懂`API`，而且程序员不用了解`API`就能看明白使用`API`的代码。
 
 ## 1.5 易于记忆
 
@@ -669,9 +669,7 @@ str.replace("%USER%", user, Qt::CaseInsensitive); // Qt 4
 
 ## 8.1 `QProgressBar`
 
-为了展示上文各种准则的实际应用。我们来学习一下`Qt 3`中`QProgressBar`的`API`，并与`Qt 4`中对应的`API`作比较。
-
-在`Qt 3`中：
+为了展示上文各种准则的实际应用。我们来研究一下`Qt 3`中`QProgressBar`的`API`，并与`Qt 4`中对应的`API`作比较。在`Qt 3`中：
 
 ```cpp
 class QProgressBar : public QWidget
@@ -705,7 +703,7 @@ protected:
 };
 ```
 
-该`API`相当的复杂和不一致；例如，`reset()`、`setTotalSteps()`、`setProgress()`是紧密联系的但方法的命名并没明确地表达出来。
+该`API`相当的复杂和不一致；例如，`reset()`、`setTotalSteps()`、`setProgress()`是紧密联系的，但方法的命名并没明确地表达出来。
 
 改善此`API`的关键是抓住`QProgressBar`与`Qt 4`的`QAbstractSpinBox`及其子类`QSpinBox`、`QSlider`、`QDail`之间的相似性。怎么做？把`progress`、`totalSteps`替换为`minimum`、`maximum`和`value`。增加一个`valueChanged()`消息，再增加一个`setRange()`函数。
 
@@ -717,7 +715,7 @@ void setTextVisible(bool visible);
 bool isTextVisible() const;
 ```
 
-默认情况下，显示文本是百分比指示器（`percentage indicator`），重写`text()`方法来定制行为。
+默认情况下，显示文本是百分比指示器（`percentage indicator`），通过重写`text()`方法来定制行为。
 
 `Qt 3`的`setCenterIndicator()`与`setIndicatorFollowsStyle()`是两个影响对齐方式的函数。他们可被一个`setAlignment()`函数代替：
 
@@ -766,7 +764,7 @@ signals:
 
 ## 8.3 `QAbstractItemModel`
 
-关于模型/视图（`model`/`view`）问题的细节在对应的文档中已经说明得很好了，但需要强调的一个重要的总结是：抽象类不应该仅是所有可能子类的并集（`union`）。这样『合并所有』的父类几乎不可能是一个好的方案。`QAbstractItemModel`就犯了这个错误 —— 它实际上就是个`QTreeOfTablesModel`，结果就导致了一个错综复杂（`complicated`）的`API`，而这样的`API`要让 **_所有本来设计还不错的子类_** 去继承。
+关于模型/视图（`model`/`view`）问题的细节在相应的文档中已经说明得很好了，但作为一个重要的总结这里还需要强调一下：抽象类不应该仅是所有可能子类的并集（`union`）。这样『合并所有』的父类几乎不可能是一个好的方案。`QAbstractItemModel`就犯了这个错误 —— 它实际上就是个`QTreeOfTablesModel`，结果导致了错综复杂（`complicated`）的`API`，而这样的`API`要让 **_所有本来设计还不错的子类_** 去继承。
 
 仅仅增加抽象是不会自动就把`API`变得更好的。
 
